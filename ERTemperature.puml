@@ -1,0 +1,56 @@
+@startuml
+
+/' 背景色定義  '/
+!define MASTER_BACK_COLOR #FFE9E8
+!define TRANSACTION_BACK_COLOR #EAF0FF
+
+/' マークの色定義  '/
+!define MASTER_MARK_COLOR AAFFAA
+!define TRANSACTION_MARK_CORLOR FFAA00
+
+entity "凡例" <<凡, FFFFFF>> {
++ PK
+- FK
+# PK + FK
+* 必須
+}
+
+/' --- エンティティ --- '/
+
+package "ユーザ管理システムDB" as Ext <<Database>> {
+    entity "ユーザマスタ" as ExtUserMaster <<M,MASTER_MARK_COLOR>> MASTER_BACK_COLOR {
+    + ユーザID : INT
+    --
+    ユーザ名 : varchar(100)
+    }
+}
+
+package "マスタ" as Master  {
+    entity "ユーザエリアマスタ" as UserMaster <<M,MASTER_MARK_COLOR>> MASTER_BACK_COLOR{
+    # ユーザID : INT
+    # エリアID : INT
+    }
+
+    entity "エリアマスタ" as AreaMaster <<M,MASTER_MARK_COLOR>> MASTER_BACK_COLOR {
+    + エリアID : INT
+    --
+    エリア名 : varchar(100)
+    }
+}
+
+package "天気予報" as WeatherForecast  {
+    entity "天気予報" as WeatherForecast <<T,TRANSACTION_MARK_CORLOR>> TRANSACTION_BACK_COLOR {
+    # エリアID: INT
+    + 日付 : DATE
+    --
+    * 天気 : VARCHAR(100)
+    * 温度 : INT
+    }
+}
+
+/' --- リレーション / カーディナリティ --- '/
+ExtUserMaster ||-d-|| UserMaster
+UserMaster }o-d-|| AreaMaster
+AreaMaster ||-r-|{ WeatherForecast
+
+@enduml
